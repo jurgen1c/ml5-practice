@@ -9,12 +9,20 @@ let state = 'waiting';
 let targetLabel;
 
 function keyPressed(){
-  targetLabel = key;
-  console.log(targetLabel);
-  setTimeout(() => {
-    console.log('collecting')
-    state = 'collecting';
-  }, 2000);
+  if(key == 's'){
+    brain.saveData();
+  }else {
+    targetLabel = key;
+    console.log(targetLabel);
+    setTimeout(() => {
+      console.log('collecting')
+      state = 'collecting';
+      setTimeout(() => {
+        console.log('not collecting');
+        state = 'waiting';
+      }, 10000);
+    }, 10000);
+  }
 
 }
 
@@ -33,6 +41,17 @@ function setup(){
     debug: true
   }
   brain = ml5.nerualNetwork(options);
+  brain.loadData('train.json', dataReady);
+}
+
+function dataReady(){
+  brain.normalizeData();
+  brain.train({epochs: 10}, finished);
+}
+
+function finished(){
+  console.log('model trained');
+  brain.save();
 }
 
 function gotPoses(poses){
@@ -40,14 +59,15 @@ function gotPoses(poses){
   if(poses.length > 0){
     pose = poses[0].pose;
     skeleton = poses[0].skeleton;
-
-    let inputs = [];
-
-    for(let i = 0; i < pose.keypoints.length; i++){
-      let x = pose.keypoints[i].position.x;
-      let y = pose.keypoints[i].position.y;
-      inputs.push(x);
-      inputs.push(y);
+    if(state === 'collecting'){
+      let inputs = [];
+  
+      for(let i = 0; i < pose.keypoints.length; i++){
+        let x = pose.keypoints[i].position.x;
+        let y = pose.keypoints[i].position.y;
+        inputs.push(x);
+        inputs.push(y);
+      }
     }
 
     let target = [targetLabel]; 
