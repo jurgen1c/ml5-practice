@@ -12,8 +12,9 @@ function keyPressed(){
   if(key == 's'){
     brain.saveData();
   }else {
-    if(key == 'y'){
+    if(key == 'd'){
       targetLabel = 'Dab';
+      console.log(targetLabel);
     }else{
       targetLabel = key;
       console.log(targetLabel);
@@ -63,8 +64,8 @@ function gotPoses(poses){
   if(poses.length > 0){
     pose = poses[0].pose;
     skeleton = poses[0].skeleton;
-    let inputs = [];
     if(state === 'collecting'){
+      let inputs = [];
   
       for(let i = 0; i < pose.keypoints.length; i++){
         let x = pose.keypoints[i].position.x;
@@ -72,11 +73,10 @@ function gotPoses(poses){
         inputs.push(x);
         inputs.push(y);
       }
+      let target = [targetLabel]; 
+  
+      brain.addData(inputs, target)
     }
-
-    let target = [targetLabel]; 
-
-    brain.addData(inputs, target)
   }
 }
 
