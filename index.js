@@ -12,8 +12,12 @@ function keyPressed(){
   if(key == 's'){
     brain.saveData();
   }else {
-    targetLabel = key;
-    console.log(targetLabel);
+    if(key == 'y'){
+      targetLabel = 'Dab';
+    }else{
+      targetLabel = key;
+      console.log(targetLabel);
+    }
     setTimeout(() => {
       console.log('collecting')
       state = 'collecting';
@@ -40,13 +44,13 @@ function setup(){
     task: 'classification',
     debug: true
   }
-  brain = ml5.nerualNetwork(options);
-  brain.loadData('train.json', dataReady);
+  brain = ml5.neuralNetwork(options);
+  brain.loadData('dab.json', dataReady);
 }
 
 function dataReady(){
   brain.normalizeData();
-  brain.train({epochs: 10}, finished);
+  brain.train({epochs: 50}, finished);
 }
 
 function finished(){
@@ -55,12 +59,12 @@ function finished(){
 }
 
 function gotPoses(poses){
-  console.log(poses);
+  //console.log(poses);
   if(poses.length > 0){
     pose = poses[0].pose;
     skeleton = poses[0].skeleton;
+    let inputs = [];
     if(state === 'collecting'){
-      let inputs = [];
   
       for(let i = 0; i < pose.keypoints.length; i++){
         let x = pose.keypoints[i].position.x;
