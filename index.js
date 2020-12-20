@@ -46,7 +46,7 @@ function setup(){
     debug: true
   }
   brain = ml5.neuralNetwork(options);
-  brain.loadData('dab.json', dataReady);
+  //brain.loadData('dab.json', dataReady);
 }
 
 function dataReady(){
