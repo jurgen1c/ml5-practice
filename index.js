@@ -4,12 +4,13 @@ let pose;
 let skeleton;
 
 let brain;
+let poseLabel = 'Y';
 
-let state = 'waiting';
-let targetLabel;
+/* let state = 'waiting';
+let targetLabel; */
 
 function keyPressed(){
-  if(key == 's'){
+  /* if(key == 's'){
     brain.saveData();
   }else {
     if(key == 'y'){
@@ -26,7 +27,7 @@ function keyPressed(){
         state = 'waiting';
       }, 10000);
     }, 10000);
-  }
+  } */
 
 }
 
@@ -45,7 +46,43 @@ function setup(){
     debug: true
   }
   brain = ml5.neuralNetwork(options);
-  brain.loadData('dab_&_y.json', dataReady);
+  const modelInfo = {
+    model: 'model/model.json',
+    metadata: 'model/model_meta.json',
+    weights: 'model/model.weights.bin',
+  }
+  brain.load(modelInfo, brainLoaded);
+  //brain.loadData('dab_&_y.json', dataReady);
+}
+
+function brainLoaded(){
+  console.log('brain Loaded! :)!')
+  classifyPose();
+}
+
+function classifyPose(){
+  if(pose){
+    let inputs = [];
+
+    for(let i = 0; i < pose.keypoints.length; i++){
+      let x = pose.keypoints[i].position.x;
+      let y = pose.keypoints[i].position.y;
+      inputs.push(x);
+      inputs.push(y);
+    }
+    brain.classify(inputs, gotResult);
+  }else {
+    setTimeout(classifyPose, 100);
+  }
+}
+
+function gotResult(error, results){
+  //console.log(results)
+  if(results[0].confidence > 0.75){
+    poseLabel = results[0].label;
+  }
+  console.log(results[0].confidence);
+  classifyPose();
 }
 
 function dataReady(){
@@ -63,7 +100,7 @@ function gotPoses(poses){
   if(poses.length > 0){
     pose = poses[0].pose;
     skeleton = poses[0].skeleton;
-    let inputs = [];
+    /* let inputs = [];
     if(state === 'collecting'){
   
       for(let i = 0; i < pose.keypoints.length; i++){
@@ -76,7 +113,7 @@ function gotPoses(poses){
 
     let target = [targetLabel]; 
 
-    brain.addData(inputs, target)
+    brain.addData(inputs, target) */
   }
 }
 
@@ -91,13 +128,13 @@ function draw(){
 
   if(pose){
 
-    let eyeR = pose.rightEye;
+    /* let eyeR = pose.rightEye;
     let eyeL = pose.leftEye;
     let d = dist(eyeR.x, eyeR.y, eyeL.x, eyeL.y); 
 
     fill(255, 0, 0);
     ellipse(pose.nose.x, pose.nose.y, d);
-    fill(0, 0, 255);
+    fill(0, 0, 255); */
     ellipse(pose.rightWrist.x, pose.rightWrist.y, 32);
     ellipse(pose.leftWrist.x, pose.leftWrist.y, 32);
 
@@ -116,4 +153,10 @@ function draw(){
       line(a.position.x, a.position.y, b.position.x, b.position.y);
     }
   }
+  fill(255,0,255);
+  noStroke();
+  textSize(156);
+  textAlign(CENTER, CENTER);
+  text(poseLabel, width / 2, height / 2);
+
 }
