@@ -13,10 +13,16 @@ function keyPressed(){
     brain.saveData();
   }else {
     if(key == 'd'){
-      targetLabel = 'Dab';
+      targetLabel = 'default';
       console.log(targetLabel);
-    }else{
-      targetLabel = key;
+    }else if(key == 'l'){
+      targetLabel = 'left';
+      console.log(targetLabel);
+    }else if(key == 'r'){
+      targetLabel = 'right';
+      console.log(targetLabel);
+    }else if(key == 'f'){
+      targetLabel = 'fire';
       console.log(targetLabel);
     }
     setTimeout(() => {
@@ -25,7 +31,7 @@ function keyPressed(){
       setTimeout(() => {
         console.log('not collecting');
         state = 'waiting';
-      }, 10000);
+      }, 20000);
     }, 10000);
   }
 
