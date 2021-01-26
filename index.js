@@ -16,13 +16,17 @@ function keyPressed(){
       targetLabel = 'default';
       console.log(targetLabel);
     }else if(key == 'l'){
-      targetLabel = 'left';
+      targetLabel = 'Sentadilla G';
       console.log(targetLabel);
-    }else if(key == 'r'){
-      targetLabel = 'right';
+    }else if(key == 'k'){
+      targetLabel = 'Sentadilla B';
       console.log(targetLabel);
     }else if(key == 'f'){
-      targetLabel = 'fire';
+      targetLabel = 'arabesque G';
+      console.log(targetLabel);
+    }
+    else if(key == 'g'){
+      targetLabel = 'arabesque B';
       console.log(targetLabel);
     }
     setTimeout(() => {
@@ -31,7 +35,7 @@ function keyPressed(){
       setTimeout(() => {
         console.log('not collecting');
         state = 'waiting';
-      }, 20000);
+      }, 15000);
     }, 10000);
   }
 
@@ -47,7 +51,7 @@ function setup(){
 
   let options = {
     input: 34,
-    output: 4,
+    output: 5,
     task: 'classification',
     debug: true
   }
